@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Main-Class: Main
+Class-Path: lib/tomcat-embed-core-9.0.82.jar lib/tomcat-embed-jasper-9.0.82.jar lib/tomcat-embed-el-9.0.82.jar lib/ecj-3.33.0.jar lib/mysql-connector-java-8.0.33.jar lib/jstl-1.2.jar

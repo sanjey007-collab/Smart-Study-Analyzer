@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: study-analyzer
+    env: docker
+    region: oregon
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /login.jsp
+    envVars:
+      - key: DB_HOST
+        value: your-mysql-host  # Change this
+      - key: DB_PORT
+        value: 3306
+      - key: DB_NAME
+        value: study_analyzer
+      - key: DB_USER
+        value: your-db-user
+      - key: DB_PASSWORD
+        value: your-db-password
