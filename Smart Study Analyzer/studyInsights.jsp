@@ -57,14 +57,44 @@ double overall = 0;
 try{
     Class.forName("com.mysql.cj.jdbc.Driver");
 
-    Connection con = DriverManager.getConnection(
-        "jdbc:mysql://localhost:3306/study_analyzer",
-        "root",
-        ""
-    );
+    // Get environment variables
+    String dbHost = System.getenv("DB_HOST");
+    String dbPort = System.getenv("DB_PORT");
+    String dbName = System.getenv("DB_NAME");
+    String dbUser = System.getenv("DB_USER");
+    String dbPass = System.getenv("DB_PASSWORD");
+
+    String dbUrl = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName + "?useSSL=true&requireSSL=true";
+
+    Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPass);
+
+    // ---------- Auto-create tables (if not exist) ----------
+    try {
+        Statement stmt = con.createStatement();
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS users (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+            "username VARCHAR(50) UNIQUE NOT NULL, " +
+            "email VARCHAR(100) UNIQUE NOT NULL, " +
+            "password VARCHAR(255) NOT NULL)");
+        stmt.executeUpdate("CREATE TABLE IF NOT EXISTS analyzer_reports (" +
+            "id INT AUTO_INCREMENT PRIMARY KEY, " +
+            "username VARCHAR(50) NOT NULL, " +
+            "subject_name VARCHAR(100) NOT NULL, " +
+            "total_topics INT NOT NULL, " +
+            "completed_topics INT NOT NULL, " +
+            "topics TEXT, " +
+            "times TEXT, " +
+            "total_time INT DEFAULT 0, " +
+            "progress DECIMAL(5,2) DEFAULT 0, " +
+            "FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE)");
+        stmt.close();
+    } catch (Exception e) {
+        // ignore if tables already exist
+    }
+    // ---------- End of auto-create ----------
 
     PreparedStatement ps = con.prepareStatement(
-        "SELECT * FROM study_reports WHERE username=?"
+        "SELECT * FROM analyzer_reports WHERE username=?"
     );
 
     ps.setString(1, session.getAttribute("user").toString());
