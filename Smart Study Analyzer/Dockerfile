@@ -1,25 +1,17 @@
-FROM openjdk:8-jdk-slim
+FROM tomcat:9-jdk11
 
-WORKDIR /app
+# Remove default webapps
+RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Copy all project files
-COPY . .
+# Create ROOT directory
+RUN mkdir -p /usr/local/tomcat/webapps/ROOT
 
-# Download all required JAR dependencies into lib/
-RUN mkdir -p lib && \
-    cd lib && \
-    curl -O https://repo1.maven.org/maven2/org/apache/tomcat/embed/tomcat-embed-core/9.0.82/tomcat-embed-core-9.0.82.jar && \
-    curl -O https://repo1.maven.org/maven2/org/apache/tomcat/embed/tomcat-embed-jasper/9.0.82/tomcat-embed-jasper-9.0.82.jar && \
-    curl -O https://repo1.maven.org/maven2/org/apache/tomcat/embed/tomcat-embed-el/9.0.82/tomcat-embed-el-9.0.82.jar && \
-    curl -O https://repo1.maven.org/maven2/org/eclipse/jdt/ecj/3.33.0/ecj-3.33.0.jar && \
-    curl -O https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.33/mysql-connector-java-8.0.33.jar
+# Copy ALL files from project_1 to ROOT
+COPY . /usr/local/tomcat/webapps/ROOT/
 
-# Compile Main.java
-RUN javac -cp "lib/*" Main.java
-
-# Build the executable JAR
-RUN jar cvfm study-analyzer.jar MANIFEST.MF *.jsp WEB-INF Main.class
+# Copy ALL JAR files to Tomcat's lib (includes MySQL driver of any version)
+COPY lib/*.jar /usr/local/tomcat/lib/
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "study-analyzer.jar"]
+CMD ["catalina.sh", "run"]
