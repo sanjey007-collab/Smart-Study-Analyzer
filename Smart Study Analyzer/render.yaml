@@ -4,16 +4,17 @@ services:
     env: docker
     region: oregon
     plan: free
+    rootDir: project_1
     dockerfilePath: ./Dockerfile
     healthCheckPath: /login.jsp
     envVars:
       - key: DB_HOST
-        value: your-mysql-host  # Change this
+        value: mysql-34b54408-student-9a28.1.aivencloud.com
       - key: DB_PORT
-        value: 3306
+        value: 27417
       - key: DB_NAME
-        value: study_analyzer
+        value: defaultdb
       - key: DB_USER
-        value: your-db-user
+        value: avnadmin
       - key: DB_PASSWORD
-        value: your-db-password
+        sync: false
