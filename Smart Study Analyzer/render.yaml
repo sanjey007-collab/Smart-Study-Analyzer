@@ -4,14 +4,14 @@ services:
     env: docker
     region: oregon
     plan: free
-    rootDir: project_1
+    rootDir: Smart Study Analyzer
     dockerfilePath: ./Dockerfile
     healthCheckPath: /login.jsp
     envVars:
       - key: DB_HOST
-        value: mysql-34b54408-student-9a28.1.aivencloud.com
+        value: mysql-5b350a9-sanjeys007-5567.l.aivencloud.com
       - key: DB_PORT
-        value: 27417
+        value: 10532
       - key: DB_NAME
         value: defaultdb
       - key: DB_USER
